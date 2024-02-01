@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positions in CSS</title>
+    <style>
+        body {
+            display: flex;
+        }
+        .container {
+            border: 2px solid black;
+            background-color: purple;
+            height: 3444px;
+            width: 500px;
+        }
+
+        .box {
+            border: 2px solid red;
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        #box3 {
+            position: sticky;
+            top: 19px;
+            /* top: 34px;
+            left: 34px; */
+        }
+
+        .container2 {
+            border: 2px solid olive;
+            height: 3444px;
+            width: 500px;
+        }
+
+        .boxx {
+            border: 2px solid red;
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        #box7 {
+            position: fixed;
+            top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" id="box1">Box 1</div>
+        <div class="box" id="box2">Box 2</div>
+        <div class="box" id="box3">Box 3(Sticky)</div>
+        <div class="box" id="box4">Box 4</div>
+    </div>
+
+    <div class="container2">
+        <div class="boxx" id="box5">Box 5</div>
+        <div class="boxx" id="box6">Box 6</div>
+        <div class="boxx" id="box7">Box 7(Fixed)</div>
+        <div class="boxx" id="box8">Box 8</div>
+    </div>
+</body>
+</html>
