@@ -1,0 +1,21 @@
+<script>
+    function printMyName(country, state, district) {
+        console.log(this.firstName + " " + this.lastName + ", " + country + ", " + state + ", " + district);
+    }
+
+    let name = {
+        firstName: "Ankur",
+        lastName: "Kashyap"
+    };
+
+    Function.prototype.myBind = function(param) {
+        const obj = this;
+        return function(...param2) {
+            obj.apply(param, param2);
+        };
+    };
+
+    const bindMyMethod = printMyName.myBind(name);
+    bindMyMethod("India", "Himachal Pradesh", "Kinnaur");
+
+</script>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debouncing</title>
+</head>
+<body>
+    <input type="text" name="" onkeyup="handleKeyUp(this);" /><br /><br />
+    <center>
+        <span id="debounced"></span>
+    </center>
+</body>
+</html>
+<script>
+    
+    let t;
+    let flag = false;
+    function debounce(value, apifun) {
+        return function() {
+            let context = this;
+            if(t){ clearTimeout(t); }
+
+            t = setTimeout(() => {
+                apifun(value);
+            },1000);
+        }
+    }
+
+    function apiFun(value) {
+        debounced.style.color = flag ? "orange" : "green";
+        debounced.innerHTML = `${value} --- DEBOUNCED`;
+        flag = !flag;
+    }
+
+    function handleKeyUp(e) {
+        const value = e.value;
+        const debounced = document.getElementById("debounced");
+        const debouncedValue = debounce(value, apiFun);
+        debouncedValue();
+    }
+</script>

@@ -1,0 +1,24 @@
+<script>
+
+    function curryingMultiply(x,y) {
+        console.log(x*y);
+    }
+
+    let binding = curryingMultiply.bind(this,2);
+    binding(3);
+
+    console.log(binding);
+
+
+
+    function curryingClosures(x) {
+        return function(y){
+            return x*y;
+        }
+    }
+
+    const curriedFunction = curryingClosures(2);
+
+    console.log("Closure currying", curriedFunction(3));
+
+</script>

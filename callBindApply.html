@@ -1,0 +1,17 @@
+<script>
+
+    let name = {
+        firstName: "Ankur",
+        lastName: "Kashyap",
+        printFullName: function() {
+            console.log(this.firstName + " " + this.lastName);
+        }
+    };
+
+    const { printFullName, firstName, lastName } = name;
+    console.log(firstName + " " + lastName);
+    printFullName();
+    const bindPrintFullName = printFullName.bind(name);
+    bindPrintFullName();
+
+</script>

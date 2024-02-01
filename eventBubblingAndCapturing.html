@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Bubbling and Event Capturing</title>
+    <style>
+        *{
+            margin-top: 0;
+            margin-left: 0;
+        }
+        #grandParent {
+            width: 600px;
+            height: 400px;
+            background-color: orange;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #parent {
+            width: 450px;
+            height: 250px;
+            background-color: rgb(86, 197, 86);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #child {
+            width: 300px;
+            height: 100px;
+            background-color: rgb(182, 87, 182);
+        }
+
+        #grandParentText {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-top: 0px;
+            margin-left: 0px;
+        }
+        #parentText {
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: 0px;
+            margin-left: 0px;
+        }
+        #childText {
+            position: relative;
+            margin-top: 0;
+            margin-left: 0px;
+        }
+        .button {
+            width: auto;
+            height: 33px;
+            font-size: 15px;
+            background-color: purple;
+            color: white;
+            border: 0;
+        }
+        .buttons {
+            width: auto;
+            height: 33px;
+            font-size: 15px;
+            background-color: lightgrey;
+            color: white;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="grandParent">
+        <div id="grandParentText"></div>
+
+        <div id="parent">
+            <div id="parentText"></div>
+
+            <div id="child">
+                <div id="childText"></div>
+            </div>
+        </div>
+    </div>
+    <br />
+    Bubbling: <input value="bubbling" type="radio" name="eventType" id="bubblingRadio" onclick="handleEventType(this);" />
+    Capturing: <input value="capturing" type="radio" name="eventType" id="capturingRadio" onclick="handleEventType(this);" />
+    <br /><br />
+    <button onclick="clearText()" class="button" id="clear">Clear</button>
+    <button class="buttons" id="enableBubblingChild">Disable Bubbling in Child</button>
+    <button class="buttons" id="enableBubblingParent">Disable Bubbling in Parent</button>
+    <!-- <button class="buttons" id="enableBubblingGrandParent">Disable Bubbling in Grand Parent</button> -->
+    <br /><br />
+    <!-- <button class="buttons" id="enableCapturingChild" style="visibility: hidden">Disable Capturing in Child</button>
+    <button class="buttons" id="enableCapturingParent" style="visibility: hidden">Disable Capturing in Parent</button>
+    <button class="buttons" id="enableCapturingGrandParent" style="visibility: hidden">Disable Capturing in Grand Parent</button> -->
+</body>
+</html>
+
+<script>
+    // Event Bubbling means false and Capturing is true
+
+    let eventType = "bubbling";
+
+    const gpt = document.getElementById("grandParentText");
+    const pt = document.getElementById("parentText");
+    const ct = document.getElementById("childText");
+    
+    const gp = document.getElementById("grandParent");
+    const p = document.getElementById("parent");
+    const c = document.getElementById("child");
+
+    // Event Bubbling buttons
+    const ebc = document.getElementById("enableBubblingChild");
+    const ebp = document.getElementById("enableBubblingParent");
+    const ebgp = document.getElementById("enableBubblingGrandParent");
+
+    // Event Capturing buttons
+    const ecc = document.getElementById("enableCapturingChild");
+    const ecp = document.getElementById("enableCapturingParent");
+    const ecgp = document.getElementById("enableCapturingGrandParent");
+
+    const handleButtonsVisibility = (
+        ebcArg,
+        ebpArg,
+        ebgpArg,
+        eccArg,
+        ecpArg,
+        ecgpArg
+    ) => {
+        ebc.style.visibility = ebcArg;
+        ebp.style.visibility = ebpArg;
+        // ebgp.style.visibility = ebgpArg;
+        // ecc.style.visibility = eccArg;
+        // ecp.style.visibility = ecpArg;
+        // ecgp.style.visibility = ecgpArg;
+    };
+
+    if(!localStorage.getItem('bubbling') && !localStorage.getItem('capturing')) { // if first time no localStorage is present
+        document.getElementById("bubblingRadio").setAttribute("checked", "");
+        localStorage.setItem("bubbling", true);
+    }
+
+    if(localStorage.getItem('bubbling') && localStorage.getItem('bubbling') == "true") {
+        document.getElementById("bubblingRadio").setAttribute("checked", "");
+        handleButtonsVisibility("visible","visible","visible","hidden","hidden","hidden");
+    }
+
+    if(localStorage.getItem('capturing') && localStorage.getItem('capturing') == "true") {
+        document.getElementById("capturingRadio").setAttribute("checked", "");
+        handleButtonsVisibility("hidden","hidden","hidden","visible","visible","visible");
+    }
+
+
+    let ebcType = false;
+    let ebpType = false;
+    let ebgpType = false;
+    if(localStorage.getItem('bubbling') && localStorage.getItem('bubbling') == "true") {
+        ebcType = false;
+        ebpType = false;
+        ebgpType = false;
+    } else if(localStorage.getItem('capturing') && localStorage.getItem('capturing') == "true") {
+        ebcType = true;
+        ebpType = true;
+        ebgpType = true;
+    }
+
+    // Event Bubbling
+    let ebcVariable = false;
+    let ebpVariable = false;
+    let ebgpVariable = false;
+
+    // Event Capturing
+    let eccVariable = false;
+    let ecpVariable = false;
+    let ecgpVariable = false;
+
+    gp.addEventListener("click", (e) =>  {
+        if(ebgpVariable) {
+            e.stopPropagation();
+            gpt.innerHTML = "";
+            pt.innerHTML = "";
+            ct.innerHTML = "";
+        }
+        console.log("Grand Parent Clicked");
+        gpt.innerHTML = "Grand Parent Clicked";
+    }, ebgpType);
+
+    p.addEventListener("click", (e) => {
+        if(ebpVariable) {
+            e.stopPropagation();
+            gpt.innerHTML = "";
+            pt.innerHTML = "";
+        }
+        console.log("Parent Clicked");
+        pt.innerHTML = "Parent Clicked";
+    }, ebpType);
+
+    c.addEventListener("click", (e) => {
+        if(ebcVariable) {
+            e.stopPropagation();
+            gpt.innerHTML = "";
+            pt.innerHTML = "";
+            ct.innerHTML = "";
+        }
+        console.log("Child Clicked");
+        ct.innerHTML = "Child Clicked last";
+    }, ebcType);
+
+    function clearText() {
+        console.clear();
+        gpt.innerHTML = "";
+        pt.innerHTML = "";
+        ct.innerHTML = "";
+    }
+
+    // Event Bubbling
+    // ebgp.addEventListener("click", (e) => {
+    //     ebgpVariable = !ebgpVariable;
+    //     ebgp.style.backgroundColor = ebgpVariable ? "purple" : "lightgrey";
+    // });
+
+    ebp.addEventListener("click", (e) => {
+        ebpVariable = !ebpVariable;
+        ebp.style.backgroundColor = ebpVariable ? "purple" : "lightgrey";
+    });
+
+    ebc.addEventListener("click", (e) => {
+        ebcVariable = !ebcVariable;
+        ebc.style.backgroundColor = ebcVariable ? "purple" : "lightgrey";
+    });
+
+    // Event Capturing
+    // ecgp.addEventListener("click", (e) => {
+    //     ebgpType = !ebgpType;
+    //     ecgpVariable = !ecgpVariable;
+    //     ecgp.style.backgroundColor = ecgpVariable ? "purple" : "lightgrey";
+    // });
+
+    // ecp.addEventListener("click", (e) => {
+    //     ebpType = !ebpType;
+    //     ecpVariable = !ecpVariable;
+    //     ecp.style.backgroundColor = ecpVariable ? "purple" : "lightgrey";
+    // });
+
+    // ecc.addEventListener("click", (e) => {
+    //     eccVariable = !eccVariable;
+    //     ebcType = !ebcType;
+    //     ecc.style.backgroundColor = eccVariable ? "purple" : "lightgrey";
+    // });
+
+
+    // Event Type Radio Button
+    function handleEventType(e) {
+        if(e.value == "bubbling") {
+            window.location.reload();
+            if(localStorage.getItem("bubbling") && localStorage.getItem("bubbling") == true){
+                localStorage.setItem("capturing", false); // radio button checked or not
+                handleButtonsVisibility("visible","visible","visible","hidden","hidden","hidden");
+            } else {
+                localStorage.setItem("bubbling", true); // radio button checked or not
+                localStorage.setItem("capturing", false); // radio button checked or not
+                handleButtonsVisibility("visible","visible","visible","hidden","hidden","hidden");
+            }
+        }
+
+        if(e.value == "capturing") {
+            window.location.reload();
+            if(localStorage.getItem("capturing") && localStorage.getItem("capturing") == true) {
+                localStorage.setItem("bubbling", false); // radio button checked or not
+                handleButtonsVisibility("hidden","hidden","hidden","visible","visible","visible");
+            } else {
+                localStorage.setItem("capturing", true); // radio button checked or not
+                localStorage.setItem("bubbling", false); // radio button checked or not
+                handleButtonsVisibility("hidden","hidden","hidden","visible","visible","visible");
+            }
+        }
+    }
+
+</script>
